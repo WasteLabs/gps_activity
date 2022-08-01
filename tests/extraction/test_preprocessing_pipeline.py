@@ -1,5 +1,6 @@
 from typing import List
 
+import numpy as np
 import pandas as pd
 from pandas import Timestamp
 from pandera.errors import SchemaError
@@ -100,7 +101,7 @@ def expected_gps() -> pd.DataFrame:
 
 @pytest.fixture
 def column_sequence(expected_gps: pd.DataFrame):
-    return list(expected_gps.columns)
+    return set(expected_gps.columns) - set(["plate_no", "datetime"])
 
 
 @pytest.fixture
@@ -144,9 +145,17 @@ class TestPreprocessingPipelineFactory:
         expected_gps: pd.DataFrame,
         preprocessing_pipeline: Pipeline,
         column_sequence: List[str],
+        round_tolerance: float,
     ):
         preprocessed_gps = preprocessing_pipeline.transform(gps_string_dataframe)
-        assert preprocessed_gps[column_sequence].equals(expected_gps[column_sequence])
+        preprocessed_gps = preprocessed_gps[column_sequence].values
+        expected_gps = expected_gps[column_sequence].values
+        assert np.allclose(
+            preprocessed_gps,
+            expected_gps,
+            atol=round_tolerance,
+            rtol=round_tolerance,
+        )
 
     def test_incomplete_data_validation(
         self,
