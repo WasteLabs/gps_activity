@@ -79,7 +79,9 @@ jobs:
         python -m pip install -U pip
         python -m pip install pipwin
         python -m pipwin install wheel
-        python -m pipwin install -r requirements-dev.txt
+        python -m pip install -r requirements-dev-win.txt
+        python -m pipwin install geopandas Fiona pyproj shapely rtree gdal
+
 
     - name: Testing python application
       run: python3 -m pytest tests
