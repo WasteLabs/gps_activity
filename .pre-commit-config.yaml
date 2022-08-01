@@ -53,7 +53,7 @@ repos:
             args: ["--rcfile=pylint.rc", "--disable=import-error"]
 
     -   repo: https://github.com/pycqa/flake8
-        rev: 5.0.1  # pick a git hash / tag to point to
+        rev: 5.0.1
         hooks:
         -   id: flake8
             additional_dependencies:
