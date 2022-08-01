@@ -1,0 +1,45 @@
+name: Release Python Package
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+
+  release:
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Extract latest software release
+      id: get-latest-stable-release
+      uses: thebritican/fetch-latest-release@v2.0.0
+      with:
+        github_token: ${{ github.token }}
+
+    - name: Generate changelog
+      uses: release-drafter/release-drafter@v5
+      id: changelog
+      with:
+        disable-autolabeler: true
+        prerelease: false
+        tag: ${{ github.ref_name }}
+        version: ${{ github.ref_name }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Release
+      if: ${{ !contains(github.ref_name, 'rc') }}
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: ${{ github.ref_name }}
+        body: ${{ steps.changelog.outputs.body }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # TODO: Setup integration with pypi and export
