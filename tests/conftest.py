@@ -121,4 +121,4 @@ def gps_pivot_fields() -> DataFramePivotFields:
 
 @pytest.fixture
 def round_tolerance() -> float:
-    return 10**(-4)
+    return 10 ** (-4)
