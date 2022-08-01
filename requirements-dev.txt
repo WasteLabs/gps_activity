@@ -23,6 +23,7 @@ pandas
 pandera
 pip-tools
 pydantic
+pygeos
 pylint
 pyproj
 pytest
