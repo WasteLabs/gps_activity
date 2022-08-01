@@ -1,7 +1,6 @@
 from ...abstract import AbstractNode
 from ...models import DataContainer
 from ...models import DataFramePivotFields
-
 from .precision import Precision
 from .recall import Recall
 
