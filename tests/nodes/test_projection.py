@@ -1,5 +1,6 @@
 from typing import List
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -46,26 +47,20 @@ class TestCRSProjector:
     def test_transformer_instance(self, crs_transformer: CRSTransformer):
         assert isinstance(crs_transformer, AbstractNode)
 
-    def test_transform_projection(
-        self,
-        input_dataframe: pd.DataFrame,
-        expected_dataframe: pd.DataFrame,
-        crs_transformer: CRSTransformer,
-        columns_order: List[str],
-    ):
-        computed_dataframe = crs_transformer.transform(input_dataframe.copy())
-        computed_dataframe = computed_dataframe[columns_order]
-        expected_dataframe = expected_dataframe[columns_order]
-        assert computed_dataframe.equals(expected_dataframe)
-
     def test_fit_transform_projection(
         self,
         input_dataframe: pd.DataFrame,
         expected_dataframe: pd.DataFrame,
         crs_transformer: CRSTransformer,
         columns_order: List[str],
+        round_tolerance: float,
     ):
         computed_dataframe = crs_transformer.fit_transform(input_dataframe.copy())
         computed_dataframe = computed_dataframe[columns_order]
         expected_dataframe = expected_dataframe[columns_order]
-        assert computed_dataframe.equals(expected_dataframe)
+        assert np.allclose(
+            computed_dataframe.values,
+            expected_dataframe.values,
+            atol=round_tolerance,
+            rtol=round_tolerance,
+        )

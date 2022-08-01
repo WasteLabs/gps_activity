@@ -117,3 +117,8 @@ def gps_pivot_fields() -> DataFramePivotFields:
         source_datetime="datetime",
         source_vehicle_id="plate_no",
     )
+
+
+@pytest.fixture
+def round_tolerance() -> float:
+    return 10**(-4)
