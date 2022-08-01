@@ -1,0 +1,17 @@
+[tool.commitizen]
+version = "0.1.0"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = """
+--verbosity=10 \
+--cov-report term-missing \
+--cov gps_activity -ra \
+--log-level=INFO \
+--tb=long \
+"""
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
