@@ -13,7 +13,6 @@ flake8-import-order
 flake8-polyfill
 
 geographiclib
-geopandas
 
 multiprocess
 numpy
@@ -32,5 +31,4 @@ python-dateutil
 pre-commit
 scikit-learn
 scipy
-Shapely
 toml

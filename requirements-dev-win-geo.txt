@@ -1,0 +1,5 @@
+gdal
+Fiona
+pyproj
+shapely
+rtree
