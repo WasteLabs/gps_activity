@@ -2,7 +2,6 @@ add-trailing-comma
 cognitive-complexity
 commitizen
 coverage
-cycler==0.11.0
 
 flake8
 flake8-bugbear
