@@ -66,10 +66,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install unix dependencies
-      run: |
-        make env_install_dependencies
-        source $(poetry env info --path)/bin/activate
-        make env_install_precommit_hooks
+      run: make env_install_dependencies
+
 
     - name: Testing python application
       run: python3 -m poetry run pytest tests
