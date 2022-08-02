@@ -32,3 +32,9 @@ run_test:
 
 run_precommit:
 	pre-commit run --all-files
+
+build:
+	python3 -m build
+
+publish:
+	python3 -m twine upload --repository testpypi dist/*
