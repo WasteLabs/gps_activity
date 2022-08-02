@@ -29,10 +29,7 @@ jobs:
         python-version: "3.10"
 
     - name: Install unix dependencies
-      run: |
-        make env_install_dependencies
-        source $(poetry env info --path)/bin/activate
-        make env_install_precommit_hooks
+      run: pip3 install pre-commit==2.20.0
 
     - name: Black
       run: pre-commit run black --all-files
@@ -41,7 +38,7 @@ jobs:
       run: pre-commit run pylint --all-files
 
     - name: Flake8
-      run: pre-commit run flake8 --all-files
+      run: pre-commit run pylint --all-files
 
   test:
 
@@ -75,4 +72,4 @@ jobs:
         make env_install_precommit_hooks
 
     - name: Testing python application
-      run: python3 -m pytest tests
+      run: python3 -m poetry run pytest tests
