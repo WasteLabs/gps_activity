@@ -30,7 +30,10 @@ jobs:
 
     - name: Install unix dependencies
       if: matrix.os != 'windows-latest'
-      run: make env_configure
+      run: |
+        make env_install_dependencies
+        source $(poetry env info --path)/bin/activate
+        make env_install_precommit_hooks
 
     - name: Black
       run: pre-commit run black --all-files
@@ -71,7 +74,10 @@ jobs:
 
     - name: Install unix dependencies
       if: matrix.os != 'windows-latest'
-      run: make env_configure
+      run: |
+        make env_install_dependencies
+        source $(poetry env info --path)/bin/activate
+        make env_install_precommit_hooks
 
     - name: Install windows dependencies
       if: matrix.os == 'windows-latest'
