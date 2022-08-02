@@ -1,7 +1,6 @@
 # **Vehicle activity analysis** 🚛
 
-Project for investigation & building mvp of vehicle activity extraction model
-which is algorithm designed to cluster & determine type of activity waste vehicle is doing
+A light-weight module for analysis of GPS activity
 
 ## **Waste Labs use cases** ♻️
 
