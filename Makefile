@@ -10,8 +10,8 @@ env_install_precommit_hooks:
 
 env_install_dependencies:
 	pip3 install --upgrade pip \
-	&& pip3 install wheel \
-	&& pip3 install -r requirements-dev.txt --no-cache-dir
+	&& pip3 install wheel poetry \
+	&& poetry install
 
 env_install_jupyter_extensions:
 	jupyter contrib nbextension install --sys-prefix \
