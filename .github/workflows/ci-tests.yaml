@@ -29,7 +29,7 @@ jobs:
         python-version: "3.10"
 
     - name: Install unix dependencies
-      run: pip3 install pre-commit==2.20.0
+      run: python3 -m pip install pre-commit==2.20.0
 
     - name: Black
       run: pre-commit run black --all-files
@@ -51,7 +51,7 @@ jobs:
         os: [
           "ubuntu-latest",
           "macos-latest",
-          # "windows-latest",
+          "windows-latest",
         ]
         python-version: ["3.8", "3.9", "3.10"]
 
@@ -66,7 +66,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install unix dependencies
-      run: make env_install_dependencies
+      run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel poetry
+          python3 -m poetry install
 
 
     - name: Testing python application
