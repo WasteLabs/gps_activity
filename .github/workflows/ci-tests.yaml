@@ -77,8 +77,7 @@ jobs:
       run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel poetry
-          python3 -m pip install pipwin
-          python3 -m pipwin install gdal Fiona pyproj shapely rtree
+          python3 -m pip install GDAL-3.1.4-cp38-cp38-win_amd64.whl
           python3 -m poetry install
 
     - name: Testing python application
