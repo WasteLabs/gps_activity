@@ -1,6 +1,6 @@
-from gps_activity.abstract import AbstractNode
-from gps_activity.models import DataContainer
-from gps_activity.models import DataFramePivotFields
+from ...abstract import AbstractNode
+from ...models import DataContainer
+from ...models import DataFramePivotFields
 
 
 _PIVOT_FIELDS = DataFramePivotFields()
