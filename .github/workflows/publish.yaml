@@ -52,18 +52,14 @@ jobs:
     - name: Install unix dependencies
       run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install wheel poetry
-          python3 -m poetry install
+          python3 -m pip install wheel build twine
 
     - name: Build package
       run: python3 -m build
-
-    - name: Build package 2
-      run: python3 -m poetry run build
 
     - name: Publish package to PyPI
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSOWRD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
-        python3 -m poetry run twine upload dist/*
+        python3 -m twine upload dist/*
