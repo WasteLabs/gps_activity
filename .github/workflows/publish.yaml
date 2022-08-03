@@ -55,7 +55,7 @@ jobs:
           python3 -m pip install wheel poetry
           python3 -m poetry install
 
-    - name: Build package 1
+    - name: Build package
       run: python3 -m build
 
     - name: Build package 2
