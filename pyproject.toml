@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gps_activity"
-version = "0.2.0"
+version = "0.2.1"
 packages = [ { include = "gps_activity"}]
 description = "A light-weight mobile module for analysis of GPS activity"
 authors = [
