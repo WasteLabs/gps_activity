@@ -36,4 +36,26 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # TODO: Setup integration with pypi and export
+  publish:
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+
+    - name: Install unix dependencies
+      run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel poetry
+          python3 -m poetry install
+
+    - name: Publish package to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
