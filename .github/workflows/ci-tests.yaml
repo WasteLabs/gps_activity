@@ -70,5 +70,8 @@ jobs:
           python3 -m pip install wheel poetry
           python3 -m poetry install
 
+    - name: Build package
+      run: python3 -m poetry run build
+
     - name: Testing python application
       run: python3 -m poetry run pytest tests
