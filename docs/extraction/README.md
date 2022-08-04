@@ -2,8 +2,6 @@
 
 Given part of documentation explains sequence of generic algorithm operations. Generic means that step components can be replaced by different instances and reused.
 
-**[CHECKOUT AVAILABLE MODELS](./available_models/README.md)**
-
 ## **Steps** 👣
 
 ----
