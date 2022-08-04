@@ -68,6 +68,7 @@ class DefaultValues(BaseModel):
     noise_gps_cluster_id: int = -1
     sjoin_gps_suffix: str = "gps"
     sjoin_plan_suffix: str = "plan"
+    sjoin_cluster_suffix: str = "cluster"
     pk_delimiter: str = "_"
     activity_linkage_gps_arg: str = "gps"
     activity_linkage_plan_arg: str = "plan"
@@ -112,3 +113,65 @@ class DataContainer(BaseModel):
             msg += " Please, look at coverage stats, follow specified "
             msg += "action and recalculate linkage!"
             raise ValueError(msg)
+
+    def __preprocess_clusters(self, pivots: DataFramePivotFields):
+        _columns = [
+            pivots.source_vehicle_id,
+            pivots.projected_date,
+            pivots.clustering_output,
+            pivots.source_lon,
+            pivots.source_lat,
+            pivots.clusters_pk,
+        ]
+        return self.clusters.loc[:, _columns]
+
+    def __preprocess_plan(self, pivots: DataFramePivotFields):
+        _columns = [
+            pivots.source_vehicle_id,
+            pivots.projected_date,
+            pivots.source_lon,
+            pivots.source_lat,
+            pivots.plans_pk,
+        ]
+        plan = self.plan[_columns]
+        plan = plan.rename(
+            columns={
+                pivots.source_lat: f"{pivots.source_lat}_plan",
+                pivots.source_lon: f"{pivots.source_lon}_plan",
+            },
+        )
+        return plan
+
+    def get_concatenated_gps(self) -> pd.DataFrame:
+        """
+        Function left joins (route plan details, clusters) to gps records
+
+        Returns:
+        pd.DataFrame: concatenated gps
+        """
+        _pivots = DataFramePivotFields()
+        _defaults = DefaultValues()
+        clusters = self.__preprocess_clusters(_pivots)
+        plan = self.__preprocess_plan(_pivots)
+        return (
+            self.gps.merge(
+                clusters,
+                how="left",
+                on=[
+                    _pivots.source_vehicle_id,
+                    _pivots.projected_date,
+                    _pivots.clustering_output,
+                ],
+                suffixes=[
+                    f"_{_defaults.sjoin_gps_suffix}",
+                    f"_{_defaults.sjoin_cluster_suffix}",
+                ],
+            )
+            .merge(self.clusters_plan_join, how="left", on=[_pivots.clusters_pk])
+            .merge(
+                plan,
+                how="left",
+                on=[_pivots.plans_pk],
+                suffixes=["", f"_{_defaults.sjoin_plan_suffix}"],
+            )
+        )
