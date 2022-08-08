@@ -68,11 +68,11 @@ class FDBSCAN(AbstractPredictor):
         return X
 
     def predict(self, X: pd.DataFrame) -> pd.DataFrame:
+        self.fit(X.copy())
         y = self.__dbscan.fit_predict(self.__get_model_inputs(X))
         X = self.__assign_predictions(X=X, y=y)
         X = self.__impute_noise(X)
         return X[self.TEMP_CLUSTER_COL].values
 
     def fit_predict(self, X: pd.DataFrame, y=None):
-        self.fit(X.copy(), y)
         return self.predict(X)
