@@ -22,5 +22,6 @@ class VelocityFragmentator(AbstractPredictor):
         return self
 
     def predict(self, X: pd.DataFrame) -> pd.DataFrame:
+        X = self._get_input_copy(X)
         y = X[self.source_velocity_column] <= self.max_velocity_hard_limit
         return y.values
