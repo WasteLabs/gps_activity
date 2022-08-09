@@ -68,7 +68,8 @@ class FDBSCAN(AbstractPredictor):
         return X
 
     def predict(self, X: pd.DataFrame) -> pd.DataFrame:
-        self.fit(X.copy())
+        X = self._get_input_copy(X)
+        self.fit(X)
         y = self.__dbscan.fit_predict(self.__get_model_inputs(X))
         X = self.__assign_predictions(X=X, y=y)
         X = self.__impute_noise(X)
