@@ -30,6 +30,12 @@ class AbstractPredictor(ABC, BaseEstimator, TransformerMixin):
     def predict(self, X: pd.DataFrame) -> Union[List[Union[int, float, str]], np.array]:
         pass
 
+    def _get_input_copy(self, X: pd.DataFrame) -> pd.DataFrame:
+        """
+        NOTE: predictiors don't guarantee idempotancy, that's why important to copy object first
+        """
+        return X.copy()
+
     def fit_predict(self, X: pd.DataFrame, y=None) -> Union[List[Union[int, float, str]], np.array]:
         self.fit(X, y)
         return self.predict(X)
