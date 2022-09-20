@@ -72,3 +72,6 @@ jobs:
 
     - name: Testing python application
       run: python3 -m poetry run pytest tests
+
+    - name: Upload coverage reports to Codecov with GitHub Action
+      uses: codecov/codecov-action@v3
