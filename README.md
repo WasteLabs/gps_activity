@@ -1,5 +1,11 @@
 # **GPS activity** 🚛
 
+![Python versions](https://img.shields.io/pypi/pyversions/gps_activity)
+![Latest release](https://img.shields.io/github/v/release/WasteLabs/gps_activity)
+![Latest release date](https://img.shields.io/github/release-date/WasteLabs/gps_activity)
+![License](https://img.shields.io/github/license/WasteLabs/gps_activity)
+[![CI test](https://github.com/WasteLabs/gps_activity/actions/workflows/ci-tests.yaml/badge.svg)](https://github.com/WasteLabs/gps_activity/actions/workflows/ci-tests.yaml)
+
 A light-weight module for analysis of GPS activity. Package is designed to be trade-off solution for both researchers and developers in Waste Labs.
 
 With `gps_activity` you can:
