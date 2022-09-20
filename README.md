@@ -1,5 +1,6 @@
 # **GPS activity** 🚛
 
+
 ![Python versions](https://img.shields.io/pypi/pyversions/gps_activity)
 ![Latest release](https://img.shields.io/github/v/release/WasteLabs/gps_activity)
 ![Latest release date](https://img.shields.io/github/release-date/WasteLabs/gps_activity)
