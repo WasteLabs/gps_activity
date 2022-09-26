@@ -74,4 +74,9 @@ jobs:
       run: python3 -m poetry run pytest tests
 
     - name: Upload coverage reports to Codecov with GitHub Action
+      if: ${{ ( (matrix.python-version == '3.10') && (matrix.os == 'ubuntu-latest') && (contains(github.ref_name, 'main')) ) }}
       uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        verbose: true
