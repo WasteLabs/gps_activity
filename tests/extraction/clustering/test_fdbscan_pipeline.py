@@ -1,49 +1,43 @@
 import pandas as pd
 from sklearn.pipeline import Pipeline
 
-from gps_activity.models import DataFramePivotFields
-from gps_activity.models import DefaultValues
-
-
-default_values = DefaultValues()
-pivot_fields = DataFramePivotFields()
+from .conftest import ensure_ignore_non_cluster_candidates
 
 
 class TestFDBSCAN:
-
-    CLUSTER_OUPUT_COLUMNS = pivot_fields.clustering_output
-    NOISE_IMPUTE_VALUE = default_values.noise_gps_cluster_id
-
-    def __test_cluster_count(self, gps: pd.DataFrame, cluster_id_col: str):
-        assert gps[cluster_id_col].nunique() == 3
-
-    def __ensure_ignore_non_cluster_candidates(
+    def __test_cluster_count(
         self,
         gps: pd.DataFrame,
-        fragmentation_flag: str,
-        cluster_cand_col: str,
+        cluster_id_col: str,
+        expected_cluster_count: int,
     ):
-        cluster_ids = gps.loc[~gps[fragmentation_flag], cluster_cand_col]
-        assert (cluster_ids == self.NOISE_IMPUTE_VALUE).all()
+        assert gps[cluster_id_col].nunique() == expected_cluster_count
 
     def test_instance(self, fdbscan_pipeline: Pipeline):
         assert isinstance(fdbscan_pipeline, Pipeline)
 
+    # flake8: noqa: CFQ002
     def test_pipeline(
         self,
         clustering_gps_points: pd.DataFrame,
         fdbscan_pipeline: Pipeline,
+        clustering_output_column: str,
+        gps_pivot_fields,
+        noise_impute_value: int,
+        expected_cluster_count: int,
     ):
         y_pred = fdbscan_pipeline.fit_predict(clustering_gps_points)
-        clustering_gps_points[self.CLUSTER_OUPUT_COLUMNS] = y_pred
+        clustering_gps_points[clustering_output_column] = y_pred
         self.__test_cluster_count(
             clustering_gps_points,
-            self.CLUSTER_OUPUT_COLUMNS,
+            clustering_output_column,
+            expected_cluster_count=expected_cluster_count,
         )
-        self.__ensure_ignore_non_cluster_candidates(
+        ensure_ignore_non_cluster_candidates(
             clustering_gps_points,
-            pivot_fields.fragmentation_output,
-            self.CLUSTER_OUPUT_COLUMNS,
+            gps_pivot_fields.fragmentation_output,
+            clustering_output_column,
+            noise_impute_value,
         )
 
     def test_unique_vehicle_constrain(
