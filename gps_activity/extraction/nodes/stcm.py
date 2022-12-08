@@ -41,6 +41,12 @@ class STCM(AbstractPredictor):
         eps: float,
         min_duration_sec: float,
     ):
+        """
+        Args:
+        eps (float): Max distance span between 2 adjacent
+            gps records to link together
+        min_duration_sec (float): Minimum duration spent on site to form cluster
+        """
         self.eps = eps
         self.min_duration_sec = min_duration_sec
 
