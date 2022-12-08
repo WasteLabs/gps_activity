@@ -51,7 +51,11 @@ preprocessing = PreprocessingFactory.factory_pipeline(
 )
 
 fragmentation = VelocityFragmentationFactory.factory_pipeline(max_velocity_hard_limit=4)
-clustering = FDBSCANFactory.factory_pipeline(eps=30, min_samples=3)
+clustering = FDBSCANFactory.factory_pipeline(
+    source_vehicle_id_column="plate_no",
+    eps=30,
+    min_samples=3,
+)
 
 activity_extraction = ActivityExtractionSession(
     preprocessing=preprocessing,
@@ -65,7 +69,6 @@ activity_extraction.predict(gps)
 ## Linker module implementation 🔵 🟣 ⚫️
 
 **[Overview linker module components](https://github.com/WasteLabs/gps_activity/tree/main/docs/linker/README.md)**
-
 
 ```python
 # Initilize linkage components
