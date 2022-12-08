@@ -9,10 +9,10 @@ class PanderaValidator(AbstractNode):
     """
 
     def __init__(self, pivot_fields: DataFramePivotFields):
-        self.pandera_schema = pivot_fields.pandera_schema
+        self.pivot_fields = pivot_fields.pandera_schema
 
     def fit(self, X: pd.DataFrame, y=None):
         return self
 
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        return self.pandera_schema.validate(X)
+        return self.pivot_fields.validate(X)

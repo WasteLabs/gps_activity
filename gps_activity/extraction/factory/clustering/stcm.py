@@ -9,37 +9,21 @@ from ....abstract import AbstractPipelineFactory
 from ....models import DataFramePivotFields
 
 
-class FDBSCANFactory(AbstractPipelineFactory):
+class STCMFactory(AbstractPipelineFactory):
 
     # flake8: noqa: CFQ002
     @staticmethod
     def factory_pipeline(
         source_vehicle_id_column: str,
-        eps: float = 0.5,
-        min_samples: float = 5,
-        metric: str = "euclidean",
-        metric_params=None,
-        algorithm="auto",
-        leaf_size=30,
-        p=None,
-        n_jobs=-1,
+        eps: float = 20,
+        min_duration_sec: Union[int, float] = 60,
     ) -> Pipeline:
         """
         Function builds scikit-learn clustering pipeline
-        with fragmented density-based spatial clustering model.
+        with Spatio-temporal clustering model.
 
         Built-in constraints:
         - Only one vehicle per pipeline run
-
-        Args:
-        eps: max distance to link a points to cluster
-        min_samples: min amount of samples to form a cluster
-        metric: metrics used for estimate
-        metric_params: who knows
-        algorithm: algorithm for model building
-        leaf_size (int, optional): _description_. Defaults to 30.
-        p (_type_, optional): _description_. Defaults to None.
-        n_jobs (int, optional): _description_. Defaults to -1.
 
         Returns:
         sklear.pipeline.Pipeline: Scikit-learn clustering pipeline
@@ -63,17 +47,10 @@ class FDBSCANFactory(AbstractPipelineFactory):
                     ),
                 ),
                 (
-                    "clustering_fdbscan",
-                    local_nodes.FDBSCAN(
-                        clustering_candidate_col=pivot_fields.fragmentation_output,
+                    "clustering_stcm",
+                    local_nodes.STCM(
                         eps=eps,
-                        min_samples=min_samples,
-                        metric=metric,
-                        metric_params=metric_params,
-                        algorithm=algorithm,
-                        leaf_size=leaf_size,
-                        p=leaf_size,
-                        n_jobs=n_jobs,
+                        min_duration_sec=min_duration_sec,
                     ),
                 ),
             ],

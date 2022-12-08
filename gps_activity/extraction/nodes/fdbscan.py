@@ -33,6 +33,14 @@ class FDBSCAN(AbstractPredictor):
         n_jobs=-1,
     ):
         self.clustering_candidate_col = clustering_candidate_col
+        self.eps = eps
+        self.min_samples = min_samples
+        self.metric = metric
+        self.metric_params = metric_params
+        self.algorithm = algorithm
+        self.leaf_size = leaf_size
+        self.p = p
+        self.n_jobs = n_jobs
         self.__dbscan = DBSCAN(
             eps=eps,
             min_samples=min_samples,
