@@ -25,7 +25,11 @@ class FDBSCANFactory(AbstractPipelineFactory):
         n_jobs=-1,
     ) -> Pipeline:
         """
-        Function builds scikit-learn pipeline and accepts DBSCAN hyper parameters
+        Function builds scikit-learn clustering pipeline
+        with fragmented density-based spatial clustering model.
+
+        Built-in constraints:
+        - Only one vehicle per pipeline run
 
         Args:
         eps: max distance to link a points to cluster
