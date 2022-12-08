@@ -7,32 +7,48 @@
 [![CI test](https://github.com/WasteLabs/gps_activity/actions/workflows/ci-tests.yaml/badge.svg)](https://github.com/WasteLabs/gps_activity/actions/workflows/ci-tests.yaml)
 [![codecov](https://codecov.io/gh/WasteLabs/gps_activity/branch/main/graph/badge.svg?token=58AY7B1YBB)](https://codecov.io/gh/WasteLabs/gps_activity)
 
-A light-weight module for analysis of GPS activity. Package is designed to be trade-off solution for both researchers and developers in Waste Labs.
-
-With `gps_activity` you can:
+A light-weight module for analysis of GPS activity. Package is designed to be trade-off solution for both researchers and developers in Waste Labs. Using `gps_activity` you can:
 
 1. Cluster your time-series gps records to extract activity points
 2. Join activity points with original plan or operation report
 3. Estimate clustering performance
 
-## Install
+## Installation ☁️ -> 🖥️
 
 Using pip:
 
 ```bash
-pip install gps_activity
+pip3 install gps_activity
 ```
 
-## Extraction modules implementations 🔵 🟣 ⚫️
+## **Python package modules** 📦
 
-----
+---
 
-**[Overview extraction module components](https://github.com/WasteLabs/gps_activity/tree/main/docs/extraction/README.md)**
+- **extraction**: clusters GPS records and extracts cluster activities ([checkout module structure]((https://github.com/WasteLabs/gps_activity/tree/main/docs/extraction/README.md)))
+- **linker**: joins route plan and clustered gps records
+- **metrics**: estimates clustering performance based on:
+    1. internal source: ones that based on inter & intra cluster distances
+    2. external source: joined route plan and clustered gps records (output of **linker** module)
 
-### VHFDBSCAN 🚀
+![components](docs/diagrams/gps_activity_components.png)
 
-* Fragmentation happens by hardlimiting of velocity computed from `lat,lon,datetime` columns
-* Clustering conducted by classical DBSCAN
+## **Extraction modules** 🔵 🟣 ⚫️
+
+---
+
+Organized by preprocessing, fragmentation & clustering steps that ultimately are packed into `ActivityExtractionSession` object and orchestrated.
+
+### ⚠️ `ActivityExtractionSession` assumptions and constrains
+
+1. 1 vehicle = 1 session run: to avoid clusters overlap
+1. GPS records must be ordered over datetime: ensures adjacent consistency of gps
+1. No duplicated gps records over vehicle-timstamp: avoids division by zero during computing `velocity`
+
+### 🚀 **VHFDBSCAN**: Velocity hardlimit fragmentation Density-based spatial clustering of applications with noise
+
+- Fragmentation is performing by applying hardlimiting on velocity computed from `lat`, `lon` and `datetime` columns
+- Clustering is performed by classical DBSCAN that considers non-cluster candidates as noise
 
 ```python
 from gps_activity import ActivityExtractionSession
@@ -51,11 +67,7 @@ preprocessing = PreprocessingFactory.factory_pipeline(
 )
 
 fragmentation = VelocityFragmentationFactory.factory_pipeline(max_velocity_hard_limit=4)
-clustering = FDBSCANFactory.factory_pipeline(
-    source_vehicle_id_column="plate_no",
-    eps=30,
-    min_samples=3,
-)
+clustering = FDBSCANFactory.factory_pipeline(eps=30, min_samples=3)
 
 activity_extraction = ActivityExtractionSession(
     preprocessing=preprocessing,
@@ -64,6 +76,46 @@ activity_extraction = ActivityExtractionSession(
 )
 
 activity_extraction.predict(gps)
+```
+
+### 🚀 **VHFSTCM**: Velocity hardlimit fragmentation spatio-temporal clustering model
+
+- Fragmentation is performing by applying hardlimiting on velocity computed from `lat`, `lon` and `datetime` columns
+- Clustering is performed according steps:
+    1. Generated adjacent proximity mask (if cluster pair distance <= `eps`)
+    2. Clusters ID are generated according: proximity mask and fragmentation flag
+    3. GPS records grouped by `cluster_id` and aggregated cluster time span
+    4. Cluster is validated if time span >= `min_duration_sec`
+    5. Validated cluster ids are set to original GPS records
+
+```python
+from gps_activity import ActivityExtractionSession
+from gps_activity.extraction.factory.preprocessing import PreprocessingFactory
+from gps_activity.extraction.factory.fragmentation import VelocityFragmentationFactory
+from gps_activity.extraction.factory.clustering import STCMFactory
+
+
+preprocessing = PreprocessingFactory.factory_pipeline(
+    source_lat_column="lat",
+    source_lon_column="lon",
+    source_datetime="datetime",
+    source_vehicle_id="plate_no",
+    source_crs="EPSG:4326",
+    target_crs="EPSG:2326",
+)
+
+fragmentation = VelocityFragmentationFactory.factory_pipeline(max_velocity_hard_limit=4)
+clustering = STCMFactory.factory_pipeline(
+    source_vehicle_id_column="plate_no",
+    eps=30,
+    min_duration_sec=60
+)
+
+stcm = ActivityExtractionSession(
+    preprocessing=preprocessing,
+    fragmentation=fragmentation,
+    clustering=clustering,
+)
 ```
 
 ## Linker module implementation 🔵 🟣 ⚫️
