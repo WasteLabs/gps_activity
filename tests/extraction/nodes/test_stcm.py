@@ -73,7 +73,6 @@ class TestSTCM:
     def test_stcm(self, stcm: STCM, gps: pd.DataFrame, round_tolerance: float):
         clusters_predicted = stcm.fit_predict(gps)
         clusters_expected = gps[pivot_fields.clustering_output].values
-        print(f"{clusters_predicted} vs {clusters_expected}")
         assert np.allclose(
             clusters_expected,
             clusters_predicted,
