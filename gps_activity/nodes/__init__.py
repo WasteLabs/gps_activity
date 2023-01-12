@@ -8,6 +8,7 @@ from .primary_key_generator import PrimaryKeyGenerator
 from .project_default_fields import DefaultSchemaProjector
 from .schema_validator import PanderaValidator
 from .timing import UnixtimeExtractor
+from .unique_gps_constraint import UniqueTimestampConstraint
 from .unique_vehicle_constrains import UniqueVehicleConstrain
 
 
@@ -22,4 +23,5 @@ __all__ = [
     "VelocityCalculator",
     "PrimaryKeyGenerator",
     "UniqueVehicleConstrain",
+    "UniqueTimestampConstraint",
 ]
