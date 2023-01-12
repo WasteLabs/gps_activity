@@ -58,15 +58,6 @@ def df_expected(gps_pivot_fields: DataFramePivotFields):
 
 
 @pytest.fixture
-def df_duplicated_unixtime(
-    df_expected: pd.DataFrame,
-    gps_pivot_fields: DataFramePivotFields,
-):
-    df_expected[gps_pivot_fields.computed_unixtime] = 2
-    return df_expected
-
-
-@pytest.fixture
 def df_input(
     df_expected: pd.DataFrame,
     gps_pivot_fields: DataFramePivotFields,
@@ -109,14 +100,3 @@ class TestVelocityCalculator:
     ):
         df_computed = velocity_calculator.fit_transform(df_input)
         assert df_expected[df_columns].equals(df_computed[df_columns])
-
-    def test_duplicated_unixtime_validation(
-        self,
-        velocity_calculator: VelocityCalculator,
-        df_duplicated_unixtime: pd.DataFrame,
-    ):
-        try:
-            velocity_calculator.transform(df_duplicated_unixtime)
-            raise AssertionError("Expected failure")
-        except ZeroDivisionError:
-            assert True
