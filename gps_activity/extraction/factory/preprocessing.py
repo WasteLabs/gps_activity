@@ -47,8 +47,14 @@ class PreprocessingFactory(AbstractPipelineFactory):
                     global_nodes.PanderaValidator(pivot_fields=pivot_fields),
                 ),
                 (
-                    "unique_vehicle_constrain",
+                    "unique_vehicle_constraint",
                     global_nodes.UniqueVehicleConstrain(pivot_fields=pivot_fields),
+                ),
+                (
+                    "unique_timestamp_constraint",
+                    global_nodes.UniqueTimestampConstraint(
+                        source_datetime=pivot_fields.source_datetime,
+                    ),
                 ),
                 (
                     "crs_projector",
