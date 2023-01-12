@@ -3,6 +3,7 @@ from .crs_projection import CRSTransformer
 from .date_extractor import DateExtractor
 from .df_to_gdf import ConverterDataFrame2GeoDataFrame
 from .formatting import SelectColumns
+from .order_gps import SorterGPS
 from .primary_key_generator import PrimaryKeyGenerator
 from .project_default_fields import DefaultSchemaProjector
 from .schema_validator import PanderaValidator
@@ -17,6 +18,7 @@ __all__ = [
     "DefaultSchemaProjector",
     "UnixtimeExtractor",
     "PanderaValidator",
+    "SorterGPS",
     "VelocityCalculator",
     "PrimaryKeyGenerator",
     "UniqueVehicleConstrain",
