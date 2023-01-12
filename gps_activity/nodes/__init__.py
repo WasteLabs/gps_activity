@@ -9,7 +9,7 @@ from .project_default_fields import DefaultSchemaProjector
 from .schema_validator import PanderaValidator
 from .timing import UnixtimeExtractor
 from .unique_gps_constraint import UniqueTimestampConstraint
-from .unique_vehicle_constrains import UniqueVehicleConstrain
+from .unique_vehicle_constrains import UniqueVehicleConstraint
 
 
 __all__ = [
@@ -22,6 +22,6 @@ __all__ = [
     "SorterGPS",
     "VelocityCalculator",
     "PrimaryKeyGenerator",
-    "UniqueVehicleConstrain",
+    "UniqueVehicleConstraint",
     "UniqueTimestampConstraint",
 ]

@@ -48,7 +48,7 @@ class PreprocessingFactory(AbstractPipelineFactory):
                 ),
                 (
                     "unique_vehicle_constraint",
-                    global_nodes.UniqueVehicleConstrain(pivot_fields=pivot_fields),
+                    global_nodes.UniqueVehicleConstraint(pivot_fields=pivot_fields),
                 ),
                 (
                     "unique_timestamp_constraint",

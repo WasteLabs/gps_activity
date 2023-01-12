@@ -3,7 +3,7 @@ import pytest
 
 from gps_activity.abstract import AbstractNode
 from gps_activity.models import DataFramePivotFields
-from gps_activity.nodes import UniqueVehicleConstrain
+from gps_activity.nodes import UniqueVehicleConstraint
 
 
 @pytest.fixture
@@ -20,10 +20,10 @@ def gps_invalid() -> pd.DataFrame:
 
 @pytest.fixture
 def constrain_module(gps_pivot_fields: DataFramePivotFields) -> pd.DataFrame:
-    return UniqueVehicleConstrain(pivot_fields=gps_pivot_fields)
+    return UniqueVehicleConstraint(pivot_fields=gps_pivot_fields)
 
 
-class TestUniqueVehicleConstrain:
+class TestUniqueVehicleConstraint:
     def test_validation_failure(
         self,
         constrain_module: AbstractNode,

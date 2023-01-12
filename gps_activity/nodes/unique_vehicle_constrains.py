@@ -5,7 +5,7 @@ from ..abstract import AbstractNode
 from ..models import DataFramePivotFields
 
 
-class UniqueVehicleConstrain(AbstractNode):
+class UniqueVehicleConstraint(AbstractNode):
     """
     Module validating constrain that only one unique
     vehicle must be listed in dataframe
