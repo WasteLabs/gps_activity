@@ -26,15 +26,10 @@ class VelocityCalculator(AbstractNode):
         lag_1_points = X.loc[:, lat_lon_columns].shift(1)
         return lag_0_points - lag_1_points
 
-    def __ensure_lack_time_duplicates(self, dt: pd.Series):
-        if (dt == 0).any():
-            raise ZeroDivisionError("Duplicated timestamps are met during computing velocity")
-
     def __get_unixtime_delta(self, X: pd.DataFrame) -> pd.DataFrame:
         unixtime_column = self.pivot_fields.computed_unixtime
         dt = X[unixtime_column] - X[unixtime_column].shift(1)
         dt = pd.Series(np.abs(dt))
-        self.__ensure_lack_time_duplicates(dt)
         return dt
 
     def __sort_gps(self, X: pd.DataFrame) -> pd.DataFrame:

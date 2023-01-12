@@ -33,7 +33,7 @@ class STCMFactory(AbstractPipelineFactory):
             [
                 (
                     "unique_vehicle_constrain",
-                    global_nodes.UniqueVehicleConstrain(pivot_fields=pivot_fields),
+                    global_nodes.UniqueVehicleConstraint(pivot_fields=pivot_fields),
                 ),
                 (
                     "select_columns",
