@@ -65,6 +65,12 @@ class PreprocessingFactory(AbstractPipelineFactory):
                     ),
                 ),
                 (
+                    "gps_orderer",
+                    global_nodes.SorterGPS(
+                        unixtime_column=pivot_fields.computed_unixtime,
+                    ),
+                ),
+                (
                     "velocity_calculator",
                     global_nodes.VelocityCalculator(pivot_fields=pivot_fields),
                 ),
