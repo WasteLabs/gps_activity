@@ -42,7 +42,6 @@ Organized by preprocessing, fragmentation & clustering steps that ultimately are
 ### ⚠️ `ActivityExtractionSession` assumptions and constrains
 
 1. 1 vehicle = 1 session run: to avoid clusters overlap
-1. GPS records must be ordered over datetime: ensures adjacent consistency of gps
 1. No duplicated gps records over vehicle-timstamp: avoids division by zero during computing `velocity`
 
 ### 🚀 **VHFDBSCAN**: Velocity hardlimit fragmentation Density-based spatial clustering of applications with noise
