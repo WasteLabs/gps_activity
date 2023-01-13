@@ -74,7 +74,7 @@ class DefaultValues(BaseModel):
     activity_linkage_plan_arg: str = "plan"
 
 
-class DataContainer(BaseModel):
+class LinkerDataContainer(BaseModel):
     # NOTE: keys are needed to fabricate
     # instance with mandatory components
     gps_input_key: str = "gps"

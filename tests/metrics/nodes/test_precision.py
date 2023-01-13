@@ -3,7 +3,7 @@ import pytest
 
 from gps_activity.abstract import AbstractNode
 from gps_activity.metrics.nodes import Precision
-from gps_activity.models import DataContainer
+from gps_activity.models import LinkerDataContainer
 
 
 @pytest.fixture
@@ -47,7 +47,7 @@ def clusters() -> pd.DataFrame:
 
 @pytest.fixture
 def data_container(clusters: pd.DataFrame, clusters_plan_join: pd.DataFrame) -> pd.DataFrame:
-    return DataContainer(
+    return LinkerDataContainer(
         gps=pd.DataFrame({}),
         clusters=clusters,
         plan=pd.DataFrame({}),
@@ -72,7 +72,7 @@ class TestPrecision:
     def test_estimate(
         self,
         precision: Precision,
-        data_container: DataContainer,
+        data_container: LinkerDataContainer,
         expected_precision: float,
     ):
 

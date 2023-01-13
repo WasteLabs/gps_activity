@@ -4,7 +4,7 @@ import pytest
 
 from gps_activity.abstract import AbstractNode
 from gps_activity.metrics.nodes import Fbeta
-from gps_activity.models import DataContainer
+from gps_activity.models import LinkerDataContainer
 
 
 @pytest.fixture
@@ -72,7 +72,7 @@ def data_container(
     plan: pd.DataFrame,
     clusters_plan_join: pd.DataFrame,
 ) -> pd.DataFrame:
-    return DataContainer(
+    return LinkerDataContainer(
         gps=pd.DataFrame({}),
         clusters=clusters,
         plan=plan,
@@ -97,7 +97,7 @@ class TestPrecision:
     def test_estimate(
         self,
         fbeta: Fbeta,
-        data_container: DataContainer,
+        data_container: LinkerDataContainer,
         expected_fbeta: float,
     ):
 

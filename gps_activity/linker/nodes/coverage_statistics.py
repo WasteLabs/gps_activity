@@ -2,7 +2,7 @@ import pandas as pd
 
 
 from ...abstract import AbstractNode
-from ...models import DataContainer
+from ...models import LinkerDataContainer
 from ...models import DataFramePivotFields
 from ...models import DefaultValues
 
@@ -30,7 +30,7 @@ class CoverageStatistics(AbstractNode):
     Table describes how provided gps covers provided route plan and inverse
     """
 
-    def fit(self, X: DataContainer, y=None):
+    def fit(self, X: LinkerDataContainer, y=None):
         return self
 
     def __agg_data(self, X: pd.DataFrame):
@@ -54,7 +54,7 @@ class CoverageStatistics(AbstractNode):
         X[_ACTION_FIELD] = _DEFAULT_ACTION_MSG
         return X
 
-    def transform(self, X: DataContainer):
+    def transform(self, X: LinkerDataContainer):
         _gps_agg = self.__agg_data(X.gps)
         _plan_agg = self.__agg_data(X.plan)
         action_table = pd.merge(

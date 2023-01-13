@@ -4,7 +4,7 @@ import pytest
 from sklearn.pipeline import Pipeline
 
 from gps_activity.linker.factory import CoverageStatisticsFactory
-from gps_activity.models import DataContainer
+from gps_activity.models import LinkerDataContainer
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def expected_statistics() -> pd.DataFrame:
 
 @pytest.fixture
 def data_container(gps: pd.DataFrame, plan: pd.DataFrame) -> pd.DataFrame:
-    return DataContainer.factory_instance(X={"gps": gps, "plan": plan})
+    return LinkerDataContainer.factory_instance(X={"gps": gps, "plan": plan})
 
 
 @pytest.fixture
@@ -68,7 +68,7 @@ class TestCoverageStatistics:
     def test_fit_transform_coverage_stats(
         self,
         coverage_stats: Pipeline,
-        data_container: DataContainer,
+        data_container: LinkerDataContainer,
         expected_statistics: pd.DataFrame,
     ):
         computed_stats = coverage_stats.fit_transform(data_container)
