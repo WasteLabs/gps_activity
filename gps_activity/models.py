@@ -2,6 +2,7 @@ from typing import Any, Dict
 import pandas as pd
 import pandera as pa
 from pydantic import BaseModel
+from pydantic import Field
 
 
 class CRSProjectionModel(BaseModel):
@@ -79,12 +80,26 @@ class LinkerDataContainer(BaseModel):
     # instance with mandatory components
     gps_input_key: str = "gps"
     plan_input_key: str = "plan"
-    gps: Any
-    plan: Any
-
-    coverage_stats: Any = None
-    clusters: Any = None
-    clusters_plan_join: Any = None
+    gps: Any = Field(
+        default=None,
+        description="GPS records container used for manipulation",
+    )
+    plan: Any = Field(
+        default=None,
+        description="Plan records container is used for manipulation",
+    )
+    coverage_stats: Any = Field(
+        default=None,
+        description="Plan & GPS records vehicle-date overlap report",
+    )
+    clusters: Any = Field(
+        default=None,
+        description="Aggregated clusters of GPS records",
+    )
+    clusters_plan_join: Any = Field(
+        default=None,
+        description="Link table of primary keys between GPS & Plan",
+    )
 
     @staticmethod
     def get_input(X: Dict[str, pd.DataFrame], key: str) -> pd.DataFrame:
