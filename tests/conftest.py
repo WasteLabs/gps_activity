@@ -4,6 +4,7 @@ import pytest
 
 from gps_activity.models import CRSProjectionModel
 from gps_activity.models import DataFramePivotFields
+from gps_activity.models import DefaultValues
 
 
 @pytest.fixture
@@ -117,6 +118,11 @@ def gps_pivot_fields() -> DataFramePivotFields:
         source_datetime="datetime",
         source_vehicle_id="plate_no",
     )
+
+
+@pytest.fixture
+def default_values() -> DataFramePivotFields:
+    return DefaultValues()
 
 
 @pytest.fixture

@@ -71,6 +71,27 @@ class DefaultValues(BaseModel):
     sjoin_plan_suffix: str = "plan"
     sjoin_cluster_suffix: str = "cluster"
     pk_delimiter: str = "_"
+    sjoin_cov_stat_agg_column: str = Field(
+        default="amt_records",
+        description="Column name of output aggregation of coverage stats module",
+    )
+    sjoin_cov_stat_action_default: str = Field(
+        default="Keep as is",
+        description=(
+            "Default action message of coverage statistics module,"
+            " when vehicle-date pairs are listed in all data sources"
+        ),
+    )
+    sjoin_cov_stat_action_required: str = Field(
+        default="Remove vehicle-date pair from: ",
+        description=(
+            "Action message to coverage statistics module," " when vehicle-date pairs are't listed in all data sources"
+        ),
+    )
+    sjoin_cov_stat_action_field: str = Field(
+        default="action_required",
+        description="Field name describing the action required to-do",
+    )
 
 
 class LinkerDataContainer(BaseModel):

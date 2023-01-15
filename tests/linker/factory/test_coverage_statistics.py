@@ -28,17 +28,23 @@ def plan() -> pd.DataFrame:
 
 
 @pytest.fixture
-def expected_statistics() -> pd.DataFrame:
+def expected_statistics(default_values) -> pd.DataFrame:
+    _gps_col = (
+        f"{default_values.sjoin_cov_stat_agg_column}{default_values.pk_delimiter}" f"{default_values.sjoin_gps_suffix}"
+    )
+    _plan_col = (
+        f"{default_values.sjoin_cov_stat_agg_column}{default_values.pk_delimiter}" f"{default_values.sjoin_plan_suffix}"
+    )
     return pd.DataFrame(
         {
             "plate_no": ["1", "4", "1"],
             "date": ["1", "2", "2"],
-            "n_records_gps": [1.0, 1.0, np.NaN],
-            "n_records_plan": [1.0, np.NaN, 1.0],
-            "action_required": [
-                "Keep as is",
-                "Drop vehicle-date in  _gps",
-                "Drop vehicle-date in  _plan",
+            _gps_col: [1.0, 1.0, np.NaN],
+            _plan_col: [1.0, np.NaN, 1.0],
+            default_values.sjoin_cov_stat_action_field: [
+                default_values.sjoin_cov_stat_action_default,
+                f"{default_values.sjoin_cov_stat_action_required} {default_values.sjoin_gps_suffix}",
+                f"{default_values.sjoin_cov_stat_action_required} {default_values.sjoin_plan_suffix}",
             ],
         },
     )
