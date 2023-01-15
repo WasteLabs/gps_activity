@@ -3,7 +3,7 @@ import pandas as pd
 from . import nodes
 from .models import Metrics
 from ..abstract import AbstractNode
-from ..models import DataContainer
+from ..models import LinkerDataContainer
 from ..models import DataFramePivotFields
 
 
@@ -41,10 +41,10 @@ class ActivityMetricsSession(AbstractNode):
     def __compute_metric(self, X: pd.DataFrame, metric_key: str):
         self.metrics_mappings[metric_key] = self.metrics_mappings[metric_key].transform(X)
 
-    def __is_has_any_cluster_plan_join(self, X: DataContainer):
+    def __is_has_any_cluster_plan_join(self, X: LinkerDataContainer):
         return X.clusters_plan_join.shape[0] > 0
 
-    def transform(self, X: DataContainer) -> pd.DataFrame:
+    def transform(self, X: LinkerDataContainer) -> pd.DataFrame:
         if self.__is_has_any_cluster_plan_join(X):
             X.validated_coverage_stats()
             self.__init_metrics_mapping()

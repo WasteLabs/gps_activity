@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from gps_activity.models import DataContainer
+from gps_activity.models import LinkerDataContainer
 from gps_activity.models import DataFramePivotFields
 
 
@@ -76,7 +76,7 @@ def data_container(
     plan: pd.DataFrame,
     clusters_plan_join: pd.DataFrame,
 ) -> pd.DataFrame:
-    return DataContainer(
+    return LinkerDataContainer(
         gps=gps,
         plan=plan,
         clusters=clusters,
@@ -84,13 +84,14 @@ def data_container(
     )
 
 
-class TestDataContainer:
+class TestLinkerDataContainer:
     def test_function(
         self,
-        data_container: DataContainer,
+        data_container: LinkerDataContainer,
         gps: pd.DataFrame,
     ):
-        concated_gps = data_container.get_concatenated_gps()
+        data_container.join_gps_plan()
+        concated_gps = data_container.full_gps_plan_join
         assert isinstance(concated_gps, pd.DataFrame)
         assert gps.shape[0] == concated_gps.shape[0]
         assert gps.shape[1] < concated_gps.shape[1]

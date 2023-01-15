@@ -1,7 +1,8 @@
-from typing import Any, Dict
+from typing import Any
 import pandas as pd
 import pandera as pa
 from pydantic import BaseModel
+from pydantic import Field
 
 
 class CRSProjectionModel(BaseModel):
@@ -70,38 +71,56 @@ class DefaultValues(BaseModel):
     sjoin_plan_suffix: str = "plan"
     sjoin_cluster_suffix: str = "cluster"
     pk_delimiter: str = "_"
-    activity_linkage_gps_arg: str = "gps"
-    activity_linkage_plan_arg: str = "plan"
+    sjoin_cov_stat_agg_column: str = Field(
+        default="amt_records",
+        description="Column name of output aggregation of coverage stats module",
+    )
+    sjoin_cov_stat_action_default: str = Field(
+        default="Keep as is",
+        description=(
+            "Default action message of coverage statistics module,"
+            " when vehicle-date pairs are listed in all data sources"
+        ),
+    )
+    sjoin_cov_stat_action_required: str = Field(
+        default="Remove vehicle-date pair from: ",
+        description=(
+            "Action message to coverage statistics module," " when vehicle-date pairs are't listed in all data sources"
+        ),
+    )
+    sjoin_cov_stat_action_field: str = Field(
+        default="action_required",
+        description="Field name describing the action required to-do",
+    )
 
 
-class DataContainer(BaseModel):
+class LinkerDataContainer(BaseModel):
     # NOTE: keys are needed to fabricate
     # instance with mandatory components
-    gps_input_key: str = "gps"
-    plan_input_key: str = "plan"
-    gps: Any
-    plan: Any
-
-    coverage_stats: Any = None
-    clusters: Any = None
-    clusters_plan_join: Any = None
-
-    @staticmethod
-    def get_input(X: Dict[str, pd.DataFrame], key: str) -> pd.DataFrame:
-        try:
-            return X[key]
-        except KeyError:
-            message = f"Data are provided under incorrect {key} " "key to ActivityLinkageSession"
-            raise KeyError(message)
-
-    @classmethod
-    def factory_instance(cls, X: Dict[str, pd.DataFrame]):
-
-        keys = cls()
-        gps = cls.get_input(X, keys.gps_input_key)
-        plan = cls.get_input(X, keys.plan_input_key)
-
-        return cls(gps=gps, plan=plan)
+    gps: Any = Field(
+        default=None,
+        description="GPS records container used for manipulation",
+    )
+    plan: Any = Field(
+        default=None,
+        description="Plan records container is used for manipulation",
+    )
+    coverage_stats: Any = Field(
+        default=None,
+        description="Plan & GPS records vehicle-date overlap report",
+    )
+    clusters: Any = Field(
+        default=None,
+        description="Aggregated clusters of GPS records",
+    )
+    clusters_plan_join: Any = Field(
+        default=None,
+        description="Link table of primary keys between GPS & Plan",
+    )
+    full_gps_plan_join: Any = Field(
+        default=None,
+        description="Full table join of GPS & visit plan",
+    )
 
     def validated_coverage_stats(self):
         """
@@ -142,7 +161,7 @@ class DataContainer(BaseModel):
         )
         return plan
 
-    def get_concatenated_gps(self) -> pd.DataFrame:
+    def join_gps_plan(self) -> pd.DataFrame:
         """
         Function left joins (route plan details, clusters) to gps records
 
@@ -153,7 +172,7 @@ class DataContainer(BaseModel):
         _defaults = DefaultValues()
         clusters = self.__preprocess_clusters(_pivots)
         plan = self.__preprocess_plan(_pivots)
-        return (
+        self.full_gps_plan_join = (
             self.gps.merge(
                 clusters,
                 how="left",

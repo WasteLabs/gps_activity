@@ -1,4 +1,3 @@
-import logging
 import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
@@ -46,8 +45,6 @@ class TestSTCM:
         round_tolerance: float,
     ):
         predictions = stcm_pipeline.fit_predict(sctm_test_candidate.copy())
-        logging.info(f"predictions: {predictions}")
-        logging.info(f"expected: {sctm_test_candidate[gps_pivot_fields.clustering_output]}")
         assert np.allclose(
             predictions,
             sctm_test_candidate[gps_pivot_fields.clustering_output],

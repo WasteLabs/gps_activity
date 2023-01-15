@@ -3,7 +3,7 @@ import pytest
 
 from gps_activity.abstract import AbstractNode
 from gps_activity.metrics.nodes import Recall
-from gps_activity.models import DataContainer
+from gps_activity.models import LinkerDataContainer
 
 
 @pytest.fixture
@@ -47,7 +47,7 @@ def plan() -> pd.DataFrame:
 
 @pytest.fixture
 def data_container(plan: pd.DataFrame, clusters_plan_join: pd.DataFrame) -> pd.DataFrame:
-    return DataContainer(
+    return LinkerDataContainer(
         gps=pd.DataFrame({}),
         plan=plan,
         clusters_plan_join=clusters_plan_join,
@@ -71,7 +71,7 @@ class TestRecall:
     def test_estimate(
         self,
         recall: Recall,
-        data_container: DataContainer,
+        data_container: LinkerDataContainer,
         expected_recall: float,
     ):
 

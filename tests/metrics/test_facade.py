@@ -6,7 +6,7 @@ import pytest
 
 from gps_activity import ActivityMetricsSession
 from gps_activity.abstract import AbstractNode
-from gps_activity.models import DataContainer
+from gps_activity.models import LinkerDataContainer
 
 
 @pytest.fixture
@@ -123,7 +123,7 @@ def correct_data_container(
     clusters_plan_join: pd.DataFrame,
     correct_coverage_stats: pd.DataFrame,
 ) -> pd.DataFrame:
-    return DataContainer(
+    return LinkerDataContainer(
         gps=pd.DataFrame({}),
         clusters=clusters,
         plan=plan,
@@ -139,7 +139,7 @@ def incorrect_data_container(
     clusters_plan_join: pd.DataFrame,
     incorrect_coverage_stats: pd.DataFrame,
 ) -> pd.DataFrame:
-    return DataContainer(
+    return LinkerDataContainer(
         gps=pd.DataFrame({}),
         clusters=clusters,
         plan=plan,
@@ -155,7 +155,7 @@ def no_cluster_plan_join_data_container(
     empty_clusters_plan_join: pd.DataFrame,
     correct_coverage_stats: pd.DataFrame,
 ) -> pd.DataFrame:
-    return DataContainer(
+    return LinkerDataContainer(
         gps=pd.DataFrame({}),
         clusters=clusters,
         plan=plan,
@@ -183,7 +183,7 @@ class TestActivityMetricsSession:
 
     def test_fit_transform_activity_metrics(
         self,
-        correct_data_container: DataContainer,
+        correct_data_container: LinkerDataContainer,
         metrics_session: ActivityMetricsSession,
         expected_results: List[float],
         tol: float,
@@ -198,7 +198,7 @@ class TestActivityMetricsSession:
 
     def test_incorrect_coverage_stats(
         self,
-        incorrect_data_container: DataContainer,
+        incorrect_data_container: LinkerDataContainer,
         metrics_session: ActivityMetricsSession,
         expected_results: List[float],
         tol: float,
@@ -211,7 +211,7 @@ class TestActivityMetricsSession:
 
     def test_corner_case_no_cluster_plan_join(
         self,
-        no_cluster_plan_join_data_container: DataContainer,
+        no_cluster_plan_join_data_container: LinkerDataContainer,
         metrics_session: ActivityMetricsSession,
         expected_results: List[float],
         tol: float,

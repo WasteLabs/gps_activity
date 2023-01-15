@@ -1,10 +1,11 @@
+import logging
 import numpy as np
 import pandas as pd
 import pytest
 from sklearn.pipeline import Pipeline
 
 from gps_activity.linker.factory import CoverageStatisticsFactory
-from gps_activity.models import DataContainer
+from gps_activity.models import LinkerDataContainer
 
 
 @pytest.fixture
@@ -28,17 +29,23 @@ def plan() -> pd.DataFrame:
 
 
 @pytest.fixture
-def expected_statistics() -> pd.DataFrame:
+def expected_statistics(gps_pivot_fields, default_values) -> pd.DataFrame:
+    _gps_col = (
+        f"{default_values.sjoin_cov_stat_agg_column}{default_values.pk_delimiter}" f"{default_values.sjoin_gps_suffix}"
+    )
+    _plan_col = (
+        f"{default_values.sjoin_cov_stat_agg_column}{default_values.pk_delimiter}" f"{default_values.sjoin_plan_suffix}"
+    )
     return pd.DataFrame(
         {
-            "plate_no": ["1", "4", "1"],
-            "date": ["1", "2", "2"],
-            "n_records_gps": [1.0, 1.0, np.NaN],
-            "n_records_plan": [1.0, np.NaN, 1.0],
-            "action_required": [
-                "Keep as is",
-                "Drop vehicle-date in  _gps",
-                "Drop vehicle-date in  _plan",
+            gps_pivot_fields.source_vehicle_id: ["1", "4", "1"],
+            gps_pivot_fields.projected_date: ["1", "2", "2"],
+            _gps_col: [1.0, 1.0, np.NaN],
+            _plan_col: [1.0, np.NaN, 1.0],
+            default_values.sjoin_cov_stat_action_field: [
+                default_values.sjoin_cov_stat_action_default,
+                f"{default_values.sjoin_cov_stat_action_required} {default_values.sjoin_gps_suffix}",
+                f"{default_values.sjoin_cov_stat_action_required} {default_values.sjoin_plan_suffix}",
             ],
         },
     )
@@ -46,7 +53,7 @@ def expected_statistics() -> pd.DataFrame:
 
 @pytest.fixture
 def data_container(gps: pd.DataFrame, plan: pd.DataFrame) -> pd.DataFrame:
-    return DataContainer.factory_instance(X={"gps": gps, "plan": plan})
+    return LinkerDataContainer(gps=gps, plan=plan)
 
 
 @pytest.fixture
@@ -68,10 +75,12 @@ class TestCoverageStatistics:
     def test_fit_transform_coverage_stats(
         self,
         coverage_stats: Pipeline,
-        data_container: DataContainer,
+        data_container: LinkerDataContainer,
         expected_statistics: pd.DataFrame,
     ):
         computed_stats = coverage_stats.fit_transform(data_container)
         computed_stats = self.__preprocess_for_compare(computed_stats)
         expected_statistics = self.__preprocess_for_compare(expected_statistics)
+        logging.debug(f"\n\nComputed:\n{computed_stats.columns}\n{computed_stats}")
+        logging.debug(f"\n\nExpected:\n{expected_statistics.columns}\n{expected_statistics}")
         assert expected_statistics.equals(computed_stats)

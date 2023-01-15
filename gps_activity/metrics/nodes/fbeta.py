@@ -1,5 +1,5 @@
 from ...abstract import AbstractNode
-from ...models import DataContainer
+from ...models import LinkerDataContainer
 from ...models import DataFramePivotFields
 from .precision import Precision
 from .recall import Recall
@@ -14,7 +14,7 @@ class Fbeta(AbstractNode):
         self.recall = Recall()
         self.beta = beta
 
-    def fit(self, X: DataContainer, y=None):
+    def fit(self, X: LinkerDataContainer, y=None):
         return self
 
     def __fbeta(self, recall: float, precision: float, beta: float) -> float:
@@ -22,7 +22,7 @@ class Fbeta(AbstractNode):
         _denominator = beta**2 * precision + recall
         return _numerator / _denominator
 
-    def transform(self, X: DataContainer):
+    def transform(self, X: LinkerDataContainer):
         _precision = self.precision.transform(X)
         _recall = self.recall.transform(X)
         fbeta_score = self.__fbeta(
