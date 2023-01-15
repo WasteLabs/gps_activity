@@ -121,7 +121,7 @@ def gps_pivot_fields() -> DataFramePivotFields:
 
 
 @pytest.fixture
-def default_values() -> DataFramePivotFields:
+def default_values() -> DefaultValues:
     return DefaultValues()
 
 

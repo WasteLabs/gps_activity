@@ -1,27 +1,23 @@
 import pandas as pd
 
 
-from ...abstract import AbstractNode
-from ...models import LinkerDataContainer
-from ...models import DataFramePivotFields
-from ...models import DefaultValues
+from ... import abstract
+from ... import models
 
 
-class CoverageStatistics(AbstractNode):
+class CoverageStatistics(abstract.AbstractNode):
     """
     Table describes how provided gps covers provided route plan and inverse
     """
 
-    def __init__(self):
-        _pivots = DataFramePivotFields()
-        defaults = DefaultValues()
+    def __init__(self, pivots: models.DataFramePivotFields, defaults: models.DefaultValues):
         self.__group_params = [
-            _pivots.source_vehicle_id,
-            _pivots.projected_date,
+            pivots.source_vehicle_id,
+            pivots.projected_date,
         ]
         self.__agg_column = defaults.sjoin_cov_stat_agg_column
         self.__agg_params = {
-            self.__agg_column: (_pivots.source_vehicle_id, "count"),
+            self.__agg_column: (pivots.source_vehicle_id, "count"),
         }
 
         self.__gps_suffix = f"{defaults.pk_delimiter}{defaults.sjoin_gps_suffix}"
@@ -34,7 +30,7 @@ class CoverageStatistics(AbstractNode):
         self.__default_message = defaults.sjoin_cov_stat_action_default
         self.__action_message = defaults.sjoin_cov_stat_action_required
 
-    def fit(self, X: LinkerDataContainer, y=None):
+    def fit(self, X: models.LinkerDataContainer, y=None):
         return self
 
     def __agg_data(self, X: pd.DataFrame):
@@ -58,7 +54,7 @@ class CoverageStatistics(AbstractNode):
         X[self.__action_field] = self.__default_message
         return X
 
-    def transform(self, X: LinkerDataContainer):
+    def transform(self, X: models.LinkerDataContainer):
         _gps_agg = self.__agg_data(X.gps)
         _plan_agg = self.__agg_data(X.plan)
         action_table = pd.merge(

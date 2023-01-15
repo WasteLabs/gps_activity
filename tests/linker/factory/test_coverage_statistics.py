@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 import pandas as pd
 import pytest
@@ -28,7 +29,7 @@ def plan() -> pd.DataFrame:
 
 
 @pytest.fixture
-def expected_statistics(default_values) -> pd.DataFrame:
+def expected_statistics(gps_pivot_fields, default_values) -> pd.DataFrame:
     _gps_col = (
         f"{default_values.sjoin_cov_stat_agg_column}{default_values.pk_delimiter}" f"{default_values.sjoin_gps_suffix}"
     )
@@ -37,8 +38,8 @@ def expected_statistics(default_values) -> pd.DataFrame:
     )
     return pd.DataFrame(
         {
-            "plate_no": ["1", "4", "1"],
-            "date": ["1", "2", "2"],
+            gps_pivot_fields.source_vehicle_id: ["1", "4", "1"],
+            gps_pivot_fields.projected_date: ["1", "2", "2"],
             _gps_col: [1.0, 1.0, np.NaN],
             _plan_col: [1.0, np.NaN, 1.0],
             default_values.sjoin_cov_stat_action_field: [
@@ -80,4 +81,6 @@ class TestCoverageStatistics:
         computed_stats = coverage_stats.fit_transform(data_container)
         computed_stats = self.__preprocess_for_compare(computed_stats)
         expected_statistics = self.__preprocess_for_compare(expected_statistics)
+        logging.debug(f"\n\nComputed:\n{computed_stats.columns}\n{computed_stats}")
+        logging.debug(f"\n\nExpected:\n{expected_statistics.columns}\n{expected_statistics}")
         assert expected_statistics.equals(computed_stats)

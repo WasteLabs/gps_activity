@@ -29,7 +29,7 @@ def plan() -> pd.DataFrame:
 
 
 @pytest.fixture
-def expected_statistics(default_values) -> pd.DataFrame:
+def expected_statistics(gps_pivot_fields, default_values) -> pd.DataFrame:
     _gps_col = (
         f"{default_values.sjoin_cov_stat_agg_column}{default_values.pk_delimiter}" f"{default_values.sjoin_gps_suffix}"
     )
@@ -38,8 +38,8 @@ def expected_statistics(default_values) -> pd.DataFrame:
     )
     return pd.DataFrame(
         {
-            "plate_no": ["1", "4", "1"],
-            "date": ["1", "2", "2"],
+            gps_pivot_fields.source_vehicle_id: ["1", "4", "1"],
+            gps_pivot_fields.projected_date: ["1", "2", "2"],
             _gps_col: [1.0, 1.0, np.NaN],
             _plan_col: [1.0, np.NaN, 1.0],
             default_values.sjoin_cov_stat_action_field: [
@@ -57,8 +57,8 @@ def data_container(gps: pd.DataFrame, plan: pd.DataFrame) -> pd.DataFrame:
 
 
 @pytest.fixture
-def coverage_stats() -> CoverageStatistics:
-    return CoverageStatistics()
+def coverage_stats(gps_pivot_fields, default_values) -> CoverageStatistics:
+    return CoverageStatistics(pivots=gps_pivot_fields, defaults=default_values)
 
 
 class TestCoverageStatistics:
