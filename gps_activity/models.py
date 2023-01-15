@@ -96,6 +96,10 @@ class LinkerDataContainer(BaseModel):
         default=None,
         description="Link table of primary keys between GPS & Plan",
     )
+    full_gps_plan_join: Any = Field(
+        default=None,
+        description="Full table join of GPS & visit plan",
+    )
 
     def validated_coverage_stats(self):
         """
@@ -136,7 +140,7 @@ class LinkerDataContainer(BaseModel):
         )
         return plan
 
-    def get_concatenated_gps(self) -> pd.DataFrame:
+    def join_gps_plan(self) -> pd.DataFrame:
         """
         Function left joins (route plan details, clusters) to gps records
 
@@ -147,7 +151,7 @@ class LinkerDataContainer(BaseModel):
         _defaults = DefaultValues()
         clusters = self.__preprocess_clusters(_pivots)
         plan = self.__preprocess_plan(_pivots)
-        return (
+        self.full_gps_plan_join = (
             self.gps.merge(
                 clusters,
                 how="left",

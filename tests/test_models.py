@@ -90,7 +90,8 @@ class TestLinkerDataContainer:
         data_container: LinkerDataContainer,
         gps: pd.DataFrame,
     ):
-        concated_gps = data_container.get_concatenated_gps()
+        data_container.join_gps_plan()
+        concated_gps = data_container.full_gps_plan_join
         assert isinstance(concated_gps, pd.DataFrame)
         assert gps.shape[0] == concated_gps.shape[0]
         assert gps.shape[1] < concated_gps.shape[1]

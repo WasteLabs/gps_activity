@@ -114,4 +114,5 @@ class ActivityLinkageSession:
         data_container = self.__aggregate_clusters(data_container)
         data_container = self.__join_clusters_and_plan(data_container)
         data_container = self.__validate_joins(data_container)
+        data_container.join_gps_plan()
         return data_container
