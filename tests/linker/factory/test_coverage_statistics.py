@@ -46,7 +46,7 @@ def expected_statistics() -> pd.DataFrame:
 
 @pytest.fixture
 def data_container(gps: pd.DataFrame, plan: pd.DataFrame) -> pd.DataFrame:
-    return LinkerDataContainer.factory_instance(X={"gps": gps, "plan": plan})
+    return LinkerDataContainer(gps=gps, plan=plan)
 
 
 @pytest.fixture

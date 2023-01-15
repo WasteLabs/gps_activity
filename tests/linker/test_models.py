@@ -17,13 +17,6 @@ def plan():
 
 
 class TestLinkerDataContainer:
-    def test_correct_init(self, gps: pd.DataFrame, plan: pd.DataFrame):
-        instance = LinkerDataContainer.factory_instance({"gps": gps, "plan": plan})
+    def test_init(self, gps: pd.DataFrame, plan: pd.DataFrame):
+        instance = LinkerDataContainer(gps=gps, plan=plan)
         assert isinstance(instance, BaseModel)
-
-    def test_incorrect_init(self, plan: pd.DataFrame):
-        try:
-            LinkerDataContainer.factory_instance({"dummy_input": plan})
-            raise AssertionError("Incorrect data")
-        except KeyError:
-            assert True

@@ -3,7 +3,6 @@ import pandas as pd
 from sklearn.pipeline import Pipeline
 
 from .models import SpatialJoinArguments
-from ..abstract import AbstractNode
 from ..models import LinkerDataContainer
 from ..models import DataFramePivotFields
 
@@ -11,15 +10,12 @@ from ..models import DataFramePivotFields
 pivot_fields = DataFramePivotFields()
 
 
-class ActivityLinkageSession(AbstractNode):
+class ActivityLinkageSession:
     """
     Class organizing sequence of computations of linkage
     source gps clusters & route plan details.
     NOTE: here is a corner case when no joins are found between GPS & Plan
     """
-
-    GPS = "gps"
-    PLAN = "plan"
 
     # flake8: noqa: CFQ002
     def __init__(
@@ -79,15 +75,38 @@ class ActivityLinkageSession(AbstractNode):
         data_container.clusters_plan_join = self.spatial_validator.transform(data_container.clusters_plan_join)
         return data_container
 
-    def compute_coverage_stats(self, X: Dict[str, pd.DataFrame]) -> pd.DataFrame:
-        data_container = LinkerDataContainer.factory_instance(X)
+    def compute_coverage_stats(self, gps: pd.DataFrame, plan: pd.DataFrame) -> pd.DataFrame:
+        """_summary_
+
+        Args:
+            gps (pd.DataFrame): source gps records dataframe
+            plan (pd.DataFrame): source visit plan dataframe
+
+        Returns:
+            LinkerDataContainer: data container used by liner module
+        """
+        data_container = LinkerDataContainer(gps=gps, plan=plan)
         data_container = self.__preprocess_gps(data_container)
         data_container = self.__preprocess_plan(data_container)
         data_container = self.__compute_coverage(data_container)
         return data_container.coverage_stats
 
-    def transform(self, X: Dict[str, pd.DataFrame]) -> pd.DataFrame:
-        data_container = LinkerDataContainer.factory_instance(X)
+    def transform(
+        self,
+        gps: pd.DataFrame,
+        plan: pd.DataFrame,
+    ) -> LinkerDataContainer:
+        """
+        Function performing linkage plan & gps records together
+
+        Args:
+            gps (pd.DataFrame): source gps records dataframe
+            plan (pd.DataFrame): source visit plan dataframe
+
+        Returns:
+            LinkerDataContainer: data container used by liner module
+        """
+        data_container = LinkerDataContainer(gps=gps, plan=plan)
         data_container = self.__preprocess_gps(data_container)
         data_container = self.__preprocess_plan(data_container)
         data_container = self.__compute_coverage(data_container)

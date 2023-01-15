@@ -3,7 +3,6 @@ import pytest
 from sklearn.pipeline import Pipeline
 
 from gps_activity import ActivityLinkageSession
-from gps_activity.abstract import AbstractNode
 from gps_activity.linker import factory
 from gps_activity.models import DataFramePivotFields
 
@@ -74,7 +73,7 @@ def gps() -> pd.DataFrame:
 
 
 @pytest.fixture
-def plans() -> pd.DataFrame:
+def plan() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "CRN#": [0, 1, 2, 3, 4],
@@ -178,29 +177,21 @@ def linkage_session(
 
 
 class TestActivityLinkageSession:
-    def test_instance(
-        self,
-        linkage_session: ActivityLinkageSession,
-        gps: pd.DataFrame,
-        plans: pd.DataFrame,
-    ):
-        assert isinstance(linkage_session, AbstractNode)
-
     def test_linkage_session_run(
         self,
         linkage_session: ActivityLinkageSession,
         gps: pd.DataFrame,
-        plans: pd.DataFrame,
+        plan: pd.DataFrame,
     ):
-        linkage_data = linkage_session.fit_transform(X={"gps": gps, "plan": plans})
+        linkage_data = linkage_session.transform(gps=gps, plan=plan)
         assert linkage_data.clusters_plan_join.shape[0] == 0
 
     def test_compute_coverage_stats(
         self,
         linkage_session: ActivityLinkageSession,
         gps: pd.DataFrame,
-        plans: pd.DataFrame,
+        plan: pd.DataFrame,
     ):
-        coverage_stats = linkage_session.compute_coverage_stats(X={"gps": gps, "plan": plans})
+        coverage_stats = linkage_session.compute_coverage_stats(gps=gps, plan=plan)
         assert isinstance(coverage_stats, pd.DataFrame)
         assert coverage_stats.shape[0] == 1

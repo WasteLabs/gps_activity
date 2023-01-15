@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 import pandas as pd
 import pandera as pa
 from pydantic import BaseModel
@@ -71,15 +71,11 @@ class DefaultValues(BaseModel):
     sjoin_plan_suffix: str = "plan"
     sjoin_cluster_suffix: str = "cluster"
     pk_delimiter: str = "_"
-    activity_linkage_gps_arg: str = "gps"
-    activity_linkage_plan_arg: str = "plan"
 
 
 class LinkerDataContainer(BaseModel):
     # NOTE: keys are needed to fabricate
     # instance with mandatory components
-    gps_input_key: str = "gps"
-    plan_input_key: str = "plan"
     gps: Any = Field(
         default=None,
         description="GPS records container used for manipulation",
@@ -100,23 +96,6 @@ class LinkerDataContainer(BaseModel):
         default=None,
         description="Link table of primary keys between GPS & Plan",
     )
-
-    @staticmethod
-    def get_input(X: Dict[str, pd.DataFrame], key: str) -> pd.DataFrame:
-        try:
-            return X[key]
-        except KeyError:
-            message = f"Data are provided under incorrect {key} " "key to ActivityLinkageSession"
-            raise KeyError(message)
-
-    @classmethod
-    def factory_instance(cls, X: Dict[str, pd.DataFrame]):
-
-        keys = cls()
-        gps = cls.get_input(X, keys.gps_input_key)
-        plan = cls.get_input(X, keys.plan_input_key)
-
-        return cls(gps=gps, plan=plan)
 
     def validated_coverage_stats(self):
         """
