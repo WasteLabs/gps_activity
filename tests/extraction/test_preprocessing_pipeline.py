@@ -100,8 +100,8 @@ def expected_gps() -> pd.DataFrame:
 
 
 @pytest.fixture
-def column_sequence(expected_gps: pd.DataFrame):
-    return set(expected_gps.columns) - set(["plate_no", "datetime"])
+def column_sequence(expected_gps: pd.DataFrame) -> list:
+    return list(set(expected_gps.columns) - set(["plate_no", "datetime"]))
 
 
 @pytest.fixture
